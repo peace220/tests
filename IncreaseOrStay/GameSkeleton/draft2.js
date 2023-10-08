@@ -10,7 +10,7 @@ let totalLosses = 0;
 let totalReward = 0;
 let totalGame = 0;
 const INITIAL_BET = 100;
-const TOTAL_SIMULATIONS = 1000;
+const TOTAL_SIMULATIONS = 3000;
 let totalHouseEdge = 0;
 let totalBets = 0;
 let houseEdge = 0
@@ -20,21 +20,24 @@ function getReward(round) {
     let rewardMultiplier;
     switch (round) {
         case 1:
-            if (randomValue < 0.5) return 0;
-            else if (randomValue < 0.8) rewardMultiplier = (Math.random() * 1) + 0.5; // 50% to 150%
+            if (randomValue < 0.2) return 0;
+            else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 40% to 90%
+            else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 0.5) + 1; // 100% to 150%
             else rewardMultiplier = (Math.random() * 1) + 2; // 200% to 300%
             break;
 
         case 2:
-            if (randomValue < 0.5) return 0;
-            else if (randomValue < 0.8) rewardMultiplier = (Math.random() * 1) + 0.5; // 50% to 150%
-            else rewardMultiplier = (Math.random() * 3) + 2; // 200% to 500%
+            if (randomValue < 0.3) return 0;
+            else if (randomValue < 0.6) rewardMultiplier = (Math.random() * 0.4) + 0.1; // 10% to 50%
+            else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 0.5) + 1; // 100% to 150%
+            else rewardMultiplier = (Math.random() * 3.5) + 2; // 200% to 550%
             break;
 
         case 3:
-            if (randomValue < 0.5) return 0;
-            else if (randomValue < 0.8) rewardMultiplier = (Math.random() * 1) + 0.5; // 50% to 150%
-            else rewardMultiplier = (Math.random() * 8) + 2; // 200% to 1000%
+            if (randomValue < 0.4) return 0;
+            else if (randomValue < 0.7) rewardMultiplier = (Math.random() * 0.4) + 0.1; // 10% to 50%
+            else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 0.5) + 1; // 100% to 150%
+            else rewardMultiplier = (Math.random() * 6) + 2; // 200% to 800%
             break;
 
         default:
@@ -63,7 +66,7 @@ function playgame(round = 1) {
             playgame();
         } else {
             houseEdge = (totalBets - totalReward) / totalBets;
-            // console.log(`House Edge: ${(houseEdge * 100).toFixed(2)}%`);
+
             rl.close();
         }
     } else {
@@ -98,14 +101,10 @@ function playGame(round = 1, totalReward = 0) {
 
 }
 
-for (iteration = 0; iteration < 100000; iteration++) {
+for (iteration = 0; iteration < 1000000; iteration++) {
     playgame()
     totalHouseEdge += houseEdge;
 }
-const averageHouseEdge = totalHouseEdge / 100000;
-console.log(averageHouseEdge * 100);
-
-
-
-// to do, so in round2 and round 3, house edge is negative. i leave it to you to tune the house edge.
-// and this is a simple draft. please improve upon it, make it more exciting.
+const averageHouseEdge = totalHouseEdge / 1000000;
+console.log(`Average House Edge: ${(averageHouseEdge * 100).toFixed(2)}%`);
+console.log(Math.pow(Math.random(), 1))
