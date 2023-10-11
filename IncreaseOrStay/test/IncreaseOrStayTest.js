@@ -97,17 +97,18 @@ describe("NumberGame tests set #1", function () {
     });
 
     describe("withdraw", function(){
-        it("If player win game round 3 state change to gameEnded", async function () {
+        it("Player able to withdraw whenever they want", async function () {
             await increaseOrStay.connect(addr1).createGame({value: ethers.utils.parseEther("1")});
             const tx = await increaseOrStay.connect(addr1).createGame({value: ethers.utils.parseEther("0.05")});
             const receipt = await tx.wait();
             const gameId = receipt.events[0].args.gameId;
             let game = await increaseOrStay.games(gameId);
             await increaseOrStay.connect(addr1).playGame(gameId);
-            await increaseOrStay.connect(addr1).playGame(gameId);
+            game = await increaseOrStay.games(gameId);
+            expect(game.currentState).to.equal(1);
             await increaseOrStay.connect(addr1).Withdraw(gameId);
             game = await increaseOrStay.games(gameId);
-            
+            expect(game.currentState).to.equal(5);
         });
     })
 });
