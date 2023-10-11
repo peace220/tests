@@ -9,7 +9,7 @@ let totalWins = 0;
 let totalLosses = 0;
 let totalReward = 0;
 let totalGame = 0;
-const INITIAL_BET = 100;
+const INITIAL_BET = 1;
 const TOTAL_SIMULATIONS = 3000;
 let totalHouseEdge = 0;
 let totalBets = 0;
@@ -30,14 +30,14 @@ function getReward(round) {
             if (randomValue < 0.3) return 0;
             else if (randomValue < 0.6) rewardMultiplier = (Math.random() * 0.4) + 0.1; // 10% to 50%
             else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 0.5) + 1; // 100% to 150%
-            else rewardMultiplier = (Math.random() * 3.5) + 2; // 200% to 550%
+            else rewardMultiplier = (Math.random() * 3) + 3; // 300% to 600%
             break;
 
         case 3:
             if (randomValue < 0.4) return 0;
             else if (randomValue < 0.7) rewardMultiplier = (Math.random() * 0.4) + 0.1; // 10% to 50%
             else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 0.5) + 1; // 100% to 150%
-            else rewardMultiplier = (Math.random() * 6) + 2; // 200% to 800%
+            else rewardMultiplier = (Math.random() * 3) + 3; // 300% to 600%
             break;
 
         default:
@@ -101,10 +101,4 @@ function playGame(round = 1, totalReward = 0) {
 
 }
 
-for (iteration = 0; iteration < 1000000; iteration++) {
-    playgame()
-    totalHouseEdge += houseEdge;
-}
-const averageHouseEdge = totalHouseEdge / 1000000;
-console.log(`Average House Edge: ${(averageHouseEdge * 100).toFixed(2)}%`);
-console.log(Math.pow(Math.random(), 1))
+playGame();

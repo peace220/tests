@@ -22,10 +22,11 @@ describe("NumberGame tests set #1", function () {
             const gameId = receipt.events.filter(x => x.event == "GameCreated")[0].args.gameId;
 
             const game = await increaseOrStay.games(gameId);
-            expect(game.currentState).to.equal(0); // GameState.NewGame
+            expect(game.currentState).to.equal(0); // GameState.WaitingForPlayer
             expect(game.player).to.equal(addr1.address);
-            expect(game.minimumBet).to.equal(ethers.utils.parseEther("0.05"));
-            expect(game.reward).to.equal(ethers.utils.parseEther("0.05"));
+            expect(game.playerBet).to.equal(ethers.utils.parseEther("0.05"));
+            expect(game.reward).to.equal(0);
+            expect(game.currentState).to.equal(0);
         });
     });
 
@@ -56,4 +57,57 @@ describe("NumberGame tests set #1", function () {
             await expect(increaseOrStay.setNextGameId(0)).to.be.revertedWith("Invalid game ID");
         });
     });
+
+    describe("PlayGame", function () {
+
+        it("If player win game round 1state change to round2", async function () {
+            const tx = await increaseOrStay.connect(addr1).createGame({value: ethers.utils.parseEther("0.05")});
+            const receipt = await tx.wait();
+            const gameId = receipt.events[0].args.gameId;
+            let game = await increaseOrStay.games(gameId);
+            await increaseOrStay.connect(addr1).playGame(gameId);
+            game = await increaseOrStay.games(gameId);
+            expect(game.currentState).to.equal(1);
+        });
+
+        it("If player win game round 2 state change to round3", async function () {
+            const tx = await increaseOrStay.connect(addr1).createGame({value: ethers.utils.parseEther("0.05")});
+            const receipt = await tx.wait();
+            const gameId = receipt.events[0].args.gameId;
+            let game = await increaseOrStay.games(gameId);
+            await increaseOrStay.connect(addr1).playGame(gameId);
+            await increaseOrStay.connect(addr1).playGame(gameId);
+            game = await increaseOrStay.games(gameId);
+            expect(game.currentState).to.equal(2);
+        });
+
+        it("If player win game round 3 state change to gameEnded", async function () {
+            await increaseOrStay.connect(addr1).createGame({value: ethers.utils.parseEther("1")});
+            const tx = await increaseOrStay.connect(addr1).createGame({value: ethers.utils.parseEther("0.05")});
+            const receipt = await tx.wait();
+            const gameId = receipt.events[0].args.gameId;
+            let game = await increaseOrStay.games(gameId);
+            await increaseOrStay.connect(addr1).playGame(gameId);
+            await increaseOrStay.connect(addr1).playGame(gameId);
+            await increaseOrStay.connect(addr1).playGame(gameId);
+            game = await increaseOrStay.games(gameId);
+            expect(game.currentState).to.equal(5);
+        });
+
+    });
+
+    describe("withdraw", function(){
+        it("If player win game round 3 state change to gameEnded", async function () {
+            await increaseOrStay.connect(addr1).createGame({value: ethers.utils.parseEther("1")});
+            const tx = await increaseOrStay.connect(addr1).createGame({value: ethers.utils.parseEther("0.05")});
+            const receipt = await tx.wait();
+            const gameId = receipt.events[0].args.gameId;
+            let game = await increaseOrStay.games(gameId);
+            await increaseOrStay.connect(addr1).playGame(gameId);
+            await increaseOrStay.connect(addr1).playGame(gameId);
+            await increaseOrStay.connect(addr1).Withdraw(gameId);
+            game = await increaseOrStay.games(gameId);
+            
+        });
+    })
 });
