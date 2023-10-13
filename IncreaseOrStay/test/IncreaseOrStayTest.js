@@ -28,6 +28,11 @@ describe("NumberGame tests set #1", function () {
             expect(game.reward).to.equal(0);
             expect(game.currentState).to.equal(0);
         });
+
+        // more conditions , bad path, sufficient contract balance to create game
+        // check contract balance?
+        // condition balance checking before createGame.
+
     });
 
     describe("setNextGameId", function () {
@@ -56,6 +61,9 @@ describe("NumberGame tests set #1", function () {
         it("should revert if trying to set next game ID to zero", async function () {
             await expect(increaseOrStay.setNextGameId(0)).to.be.revertedWith("Invalid game ID");
         });
+
+        // should test - alllow player to have more than 1 game.
+        // check contract balance?
     });
 
     describe("PlayGame", function () {
@@ -128,6 +136,9 @@ describe("NumberGame tests set #1", function () {
             expect(game.currentState).to.equal(5);
         });
 
+        // after win R1, player can choose to withdraw
+        // after win R2, player can choose to withdraw
+
     });
 
     describe("withdraw", function () {
@@ -144,6 +155,10 @@ describe("NumberGame tests set #1", function () {
             game = await increaseOrStay.games(gameId);
             expect(game.currentState).to.equal(5);
         });
+
+        // dont allow non player to withdraw game
+        // reentrancy guard maybe
+
     })
 
     describe("HouseEdge", function () {
@@ -154,6 +169,8 @@ describe("NumberGame tests set #1", function () {
             const numGames = 300;
             await increaseOrStay.connect(owner).setNextGameId(1);
 
+            // draft a test for my game. the test has to get probability distribution of my desired outcome
+            // the game has up to 3 rounds.
             for (let i = 0; i < numGames; i++) {
                 totalBet += 0.05;
                 const playerBet = ethers.utils.parseEther("0.05"); // Set your desired bet amount
