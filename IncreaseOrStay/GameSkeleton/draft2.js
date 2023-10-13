@@ -9,8 +9,8 @@ let totalWins = 0;
 let totalLosses = 0;
 let totalReward = 0;
 let totalGame = 0;
-const INITIAL_BET = 1;
-const TOTAL_SIMULATIONS = 3000;
+const INITIAL_BET = 0.05;
+const TOTAL_SIMULATIONS = 300;
 let totalHouseEdge = 0;
 let totalBets = 0;
 let houseEdge = 0
@@ -65,13 +65,16 @@ function playgame(round = 1) {
         if (totalGame < TOTAL_SIMULATIONS) {
             playgame();
         } else {
-            houseEdge = (totalBets - totalReward) / totalBets;
-
+            houseEdge = (totalBets - totalReward) / totalBets
+            console.log(houseEdge)
+            console.log(totalBets)
+            console.log(totalReward);
             rl.close();
         }
     } else {
         playgame(round + 1);
     }
+    
 }
 
 
@@ -101,4 +104,4 @@ function playGame(round = 1, totalReward = 0) {
 
 }
 
-playGame();
+playgame();

@@ -1,6 +1,7 @@
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 pragma solidity ^0.8.0;
 
-contract IncreaseOrStay {
+contract IncreaseOrStay is ReentrancyGuard{
     enum GameState {
         Round1,
         Round2,
