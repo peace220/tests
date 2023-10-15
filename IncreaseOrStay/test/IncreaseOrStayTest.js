@@ -11,7 +11,6 @@ describe("NumberGame tests set #1", function () {
         IncreaseOrStay = await ethers.getContractFactory("IncreaseOrStay");
         [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
         increaseOrStay = await IncreaseOrStay.deploy(ethers.utils.parseEther("0.05"));
-
     });
 
     describe("createGame", function () {
@@ -41,6 +40,7 @@ describe("NumberGame tests set #1", function () {
         };
         // Testing boundary conditions
         it("should successfully create a game and increment nextGameId", async function () {
+            await hardhatToken.connect(addr1).transfer(increaseOrStay.address, 50);
             await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const currentNextGameId = await increaseOrStay.nextGameId();
             await increaseOrStay.setNextGameId(currentNextGameId.sub(1));
@@ -60,7 +60,7 @@ describe("NumberGame tests set #1", function () {
 
     describe("PlayGame", function () {
 
-        it("If player win game round 1state change to round2", async function () {
+        it("If player win game round 1 state change to round2", async function () {
             const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const receipt = await tx.wait();
             const gameId = receipt.events[0].args.gameId;
@@ -128,6 +128,18 @@ describe("NumberGame tests set #1", function () {
             expect(game.currentState).to.equal(5);
         });
 
+        it("Other Player will not able to play a active game if its not the same player", async function () {
+            await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("1") });
+            const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
+            const receipt = await tx.wait();
+            const gameId = receipt.events[0].args.gameId;
+            await expect(increaseOrStay.connect(addr2).playGame(gameId)).to.be.revertedWith("Not the Same Player");
+        })
+
+        it("Contract will not allow player to join if there is not enough ether", async function () {
+
+        })
+
     });
 
     describe("withdraw", function () {
@@ -144,19 +156,31 @@ describe("NumberGame tests set #1", function () {
             game = await increaseOrStay.games(gameId);
             expect(game.currentState).to.equal(5);
         });
+
+        it("other Player will not able to withdraw if a game with another player in", async function () {
+            await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("1") });
+            const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
+            const receipt = await tx.wait();
+            const gameId = receipt.events[0].args.gameId;
+            let game = await increaseOrStay.games(gameId);
+            await increaseOrStay.connect(addr1).playGame(gameId);
+            game = await increaseOrStay.games(gameId);
+            expect(game.currentState).to.equal(1);
+            await expect(increaseOrStay.connect(addr2).Withdraw(gameId)).to.be.revertedWith("Not the Same Player");
+        });
     })
 
     describe("HouseEdge", function () {
         it("HouseEdge from the smart contract should be the same as the draft", async function () {
-            await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("1000") });
+            await increaseOrStay.connect(addr2).createGame({ value: ethers.utils.parseEther("1000") });
             let totalReward = 0;
             let totalBet = 0;
-            const numGames = 300;
+            const numGames = 50;
             await increaseOrStay.connect(owner).setNextGameId(1);
 
             for (let i = 0; i < numGames; i++) {
-                totalBet += 0.05;
-                const playerBet = ethers.utils.parseEther("0.05"); // Set your desired bet amount
+                totalBet += 1;
+                const playerBet = ethers.utils.parseEther("1"); // Set your desired bet amount
                 await increaseOrStay.connect(addr1).createGame({ value: playerBet });
 
                 const gameId = i + 1;
@@ -164,12 +188,10 @@ describe("NumberGame tests set #1", function () {
 
                 let game = await increaseOrStay.games(gameId);
                 let reward = parseFloat(ethers.utils.formatEther(game.reward));
-                totalReward += reward;
                 if (game.currentState == 1) {
                     await increaseOrStay.connect(addr1).playGame(gameId);
                     game = await increaseOrStay.games(gameId);
                     reward = parseFloat(ethers.utils.formatEther(game.reward));
-                    totalReward += reward;
                     if (game.currentState == 2) {
                         await increaseOrStay.connect(addr1).playGame(gameId);
                         game = await increaseOrStay.games(gameId);
@@ -177,12 +199,9 @@ describe("NumberGame tests set #1", function () {
                         totalReward += reward;
                     }
                 }
-                console.log(i)
             }
-            console.log(totalBet);
-            console.log(totalReward);
             const houseEdge = (totalBet - totalReward) / totalBet;
-            console.log(houseEdge);
+            console.log(houseEdge * 100);
         });
     })
 });

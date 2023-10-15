@@ -1,7 +1,7 @@
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 pragma solidity ^0.8.0;
 
-contract IncreaseOrStay is ReentrancyGuard{
+contract IncreaseOrStay is ReentrancyGuard {
     enum GameState {
         Round1,
         Round2,
@@ -51,6 +51,11 @@ contract IncreaseOrStay is ReentrancyGuard{
             msg.value >= defaultMinBet,
             "Please send more than default minimum bet to join the game"
         );
+        uint256 checkForBalance = msg.value * 7;
+        require(
+            checkForBalance <= address(this).balance,
+            "Contract does not have enough Ether"
+        );
         address payable currentPlayer = payable(msg.sender);
         games[gameId] = Game({
             player: currentPlayer,
@@ -90,59 +95,74 @@ contract IncreaseOrStay is ReentrancyGuard{
         Game storage game = games[gameId];
         require(game.currentState != GameState.GameEnded, "Game Ended");
         uint256 InitialBet = game.playerBet;
-        uint256 randomValue = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, blockhash(block.number - 1)))) % 100;
+        uint256 randomValue = uint256(
+            keccak256(
+                abi.encodePacked(
+                    block.timestamp,
+                    block.difficulty,
+                    blockhash(block.number - 1)
+                )
+            )
+        ) % 100;
         uint256 rewardMultiplier;
-        if(game.currentState == GameState.Round1){
+        if (game.currentState == GameState.Round1) {
             if (randomValue < 20) {
                 game.currentState = GameState.Lost;
                 return 0;
-            }
-            else if (randomValue < 50) rewardMultiplier = (randomValue % 51 + 40) * 10; // 40% to 90%
-            else if (randomValue < 90) rewardMultiplier = (randomValue % 51 + 100) * 10; // 100% to 150%
-            else rewardMultiplier = (randomValue % 101 + 200) * 10; // 200% to 300%
+            } else if (randomValue < 50)
+                rewardMultiplier = ((randomValue % 51) + 40) * 10; // 40% to 90%
+            else if (randomValue < 90)
+                rewardMultiplier = ((randomValue % 51) + 100) * 10; // 100% to 150%
+            else rewardMultiplier = ((randomValue % 101) + 200) * 10; // 200% to 300%
 
             game.currentState = GameState.Round2;
-        }else if (game.currentState == GameState.Round2) {
-            if (randomValue < 30){
+        } else if (game.currentState == GameState.Round2) {
+            if (randomValue < 30) {
                 game.currentState = GameState.Lost;
                 return 0;
-            }
-            else if (randomValue < 60) rewardMultiplier = (randomValue % 41 + 10) * 10; // 10% to 50%
-            else if (randomValue < 90) rewardMultiplier = (randomValue % 51 + 100) * 10; // 100% to 150%
-            else rewardMultiplier = (randomValue % 301 + 300) * 10; // 300% to 600%
+            } else if (randomValue < 50)
+                rewardMultiplier = ((randomValue % 51) + 40) * 10; // 10% to 50%
+            else if (randomValue < 90)
+                rewardMultiplier = ((randomValue % 16) + 150) * 10; // 100% to 150%
+            else rewardMultiplier = ((randomValue % 201) + 300) * 10; // 300% to 600%
 
             game.currentState = GameState.Round3;
-        }else if (game.currentState == GameState.Round3) {
+        } else if (game.currentState == GameState.Round3) {
             if (randomValue < 40) {
                 game.currentState = GameState.Lost;
                 return 0;
-            }
-            else if (randomValue < 70) rewardMultiplier = (randomValue % 41 + 10) * 10; // 10% to 50%
-            else if (randomValue < 90) rewardMultiplier = (randomValue % 51 + 100) * 10; // 100% to 150%
-            else rewardMultiplier = (randomValue % 301 + 300) * 10; // 300% to 600%
+            } else if (randomValue < 50)
+                rewardMultiplier = ((randomValue % 51) + 40) * 10; // 10% to 50%
+            else if (randomValue < 90)
+                rewardMultiplier = ((randomValue % 101) + 200) * 10; // 100% to 150%
+            else rewardMultiplier = ((randomValue % 301) + 400) * 10; // 300% to 600%
             game.currentState = GameState.Win;
         }
 
         return (InitialBet * rewardMultiplier) / 1000;
     }
 
-    function playGame(uint256 gameId) public payable{
+    function playGame(uint256 gameId) public payable {
         Game storage game = games[gameId];
         require(game.currentState != GameState.GameEnded, "Game Ended");
         require(gameId < nextGameId, "Invalid game ID");
+        require(msg.sender == game.player, "Not the Same Player");
         uint256 reward = getReward(gameId);
-        game.reward += reward;
-        if(game.currentState == GameState.Lost || game.currentState == GameState.Win){
+        game.reward = reward;
+        if (
+            game.currentState == GameState.Lost ||
+            game.currentState == GameState.Win
+        ) {
             game.currentState = GameState.GameEnded;
             payable(game.player).transfer(game.reward);
         }
     }
 
-
     function Withdraw(uint256 gameId) public {
         Game storage game = games[gameId];
         require(gameId < nextGameId, "Invalid game ID");
         require(game.currentState != GameState.GameEnded, "Game Ended");
+        require(msg.sender == game.player, "Not the Same Player");
 
         game.currentState = GameState.GameEnded;
         payable(game.player).transfer(game.reward);
