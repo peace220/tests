@@ -73,6 +73,7 @@ function playgame(round = 1) {
             totalWins=0;
             totalLosses=0;
             houseEdge = (totalBets - totalReward) / totalBets;
+            console.log(houseEdge*100);
             rl.close();
         }
     } else {

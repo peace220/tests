@@ -239,6 +239,19 @@ describe("NumberGame tests set #1", function () {
             expect(game.currentState).to.equal(1);
             await expect(increaseOrStay.connect(addr2).Withdraw(gameId)).to.be.revertedWith("Not the Same Player");
         });
+
+        it("Non owner will not able to withdraw unclaimed balance", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
+            const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
+            const receipt = await tx.wait();
+            const gameId = receipt.events[0].args.gameId;
+            await expect(increaseOrStay.connect(addr1).ownerWithdraw(1)).to.be.revertedWith("Ownable: caller is not the owner")
+        });
     })
 
     describe("HouseEdge", function () {
