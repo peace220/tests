@@ -15,6 +15,12 @@ describe("NumberGame tests set #1", function () {
 
     describe("createGame", function () {
         it("should create a new game with the correct initial state", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             const createGameTx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
 
             const receipt = await createGameTx.wait();
@@ -40,7 +46,12 @@ describe("NumberGame tests set #1", function () {
         };
         // Testing boundary conditions
         it("should successfully create a game and increment nextGameId", async function () {
-            await hardhatToken.connect(addr1).transfer(increaseOrStay.address, 50);
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const currentNextGameId = await increaseOrStay.nextGameId();
             await increaseOrStay.setNextGameId(currentNextGameId.sub(1));
@@ -61,6 +72,12 @@ describe("NumberGame tests set #1", function () {
     describe("PlayGame", function () {
 
         it("If player win game round 1 state change to round2", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const receipt = await tx.wait();
             const gameId = receipt.events[0].args.gameId;
@@ -71,6 +88,12 @@ describe("NumberGame tests set #1", function () {
         });
 
         it("If player win game round 2 state change to round3", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const receipt = await tx.wait();
             const gameId = receipt.events[0].args.gameId;
@@ -82,6 +105,12 @@ describe("NumberGame tests set #1", function () {
         });
 
         it("If player win game round 3 state change to gameEnded", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("1") });
             const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const receipt = await tx.wait();
@@ -95,6 +124,12 @@ describe("NumberGame tests set #1", function () {
         });
 
         it("If player lose game round 1 state change to GameEnded", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const receipt = await tx.wait();
             const gameId = receipt.events[0].args.gameId;
@@ -105,6 +140,12 @@ describe("NumberGame tests set #1", function () {
         });
 
         it("If player lose game round 2 state change to Game Ended", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const receipt = await tx.wait();
             const gameId = receipt.events[0].args.gameId;
@@ -116,6 +157,12 @@ describe("NumberGame tests set #1", function () {
         });
 
         it("If player lose game round 3 state change to GameEnded", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("1") });
             const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const receipt = await tx.wait();
@@ -129,6 +176,12 @@ describe("NumberGame tests set #1", function () {
         });
 
         it("Other Player will not able to play a active game if its not the same player", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("1") });
             const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const receipt = await tx.wait();
@@ -137,13 +190,25 @@ describe("NumberGame tests set #1", function () {
         })
 
         it("Contract will not allow player to join if there is not enough ether", async function () {
+            const amountToSend = ethers.utils.parseEther('1');
 
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
+            await expect(increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("1") })).to.be.revertedWith("Contract does not have enough Ether");
         })
 
     });
 
     describe("withdraw", function () {
         it("Player able to withdraw whenever they want", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("1") });
             const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const receipt = await tx.wait();
@@ -158,6 +223,12 @@ describe("NumberGame tests set #1", function () {
         });
 
         it("other Player will not able to withdraw if a game with another player in", async function () {
+            const amountToSend = ethers.utils.parseEther('10');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("1") });
             const tx = await increaseOrStay.connect(addr1).createGame({ value: ethers.utils.parseEther("0.05") });
             const receipt = await tx.wait();
@@ -172,11 +243,15 @@ describe("NumberGame tests set #1", function () {
 
     describe("HouseEdge", function () {
         it("HouseEdge from the smart contract should be the same as the draft", async function () {
-            await increaseOrStay.connect(addr2).createGame({ value: ethers.utils.parseEther("1000") });
+            const amountToSend = ethers.utils.parseEther('1000');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
             let totalReward = 0;
             let totalBet = 0;
             const numGames = 50;
-            await increaseOrStay.connect(owner).setNextGameId(1);
 
             for (let i = 0; i < numGames; i++) {
                 totalBet += 1;
