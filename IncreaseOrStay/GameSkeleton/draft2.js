@@ -20,7 +20,7 @@ function getReward(round) {
 
     let rewardMultiplier;
     switch (round) {
-        case 1:
+        case 1: //5.5%
             totalBets += INITIAL_BET;
             if (randomValue < 0.2) return 0;
             else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 40% to 90%
@@ -28,18 +28,19 @@ function getReward(round) {
             else rewardMultiplier = (Math.random() * 1) + 2; // 200% to 300%
             break;
 
-        case 2:
+        case 1://7%
+        totalBets += INITIAL_BET;
             if (randomValue < 0.3) return 0;
-            else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 10% to 50%
-            else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 0.15) + 1.5; // 100% to 150%
-            else rewardMultiplier = (Math.random() * 2) + 3; // 300% to 600%
+            else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 40% to 90%
+            else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 0.15) + 1.5; // 150% to 165%
+            else rewardMultiplier = (Math.random() * 2) + 3; // 300% to 500%
             break;
 
-        case 3:
+        case 3://9.5%
             if (randomValue < 0.4) return 0;
-            else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 10% to 50%
-            else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 1) + 2; // 100% to 150%
-            else rewardMultiplier = (Math.random() * 3) + 4; // 300% to 600%
+            else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 40% to 90%
+            else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 1) + 2; // 200% to 300%
+            else rewardMultiplier = (Math.random() * 3) + 4; // 400% to 700%
             break;
         default:
             console.log("Invalid round");
@@ -53,14 +54,13 @@ function playgame(round = 1) {
     const reward = getReward(round);
 
     totalGame = totalWins + totalLosses;
-    if (reward === 0 || round === 3) {
+    if (reward === 0 || round === 1) {
         if (reward === 0) {
             totalLosses++;
         }
         else {
             totalReward += reward;
 
-            // console.log("totalGame",totalGame,"reward=",reward);
             totalWins++;
         }
 
@@ -73,7 +73,6 @@ function playgame(round = 1) {
             totalWins=0;
             totalLosses=0;
             houseEdge = (totalBets - totalReward) / totalBets;
-            console.log(houseEdge*100);
             rl.close();
         }
     } else {

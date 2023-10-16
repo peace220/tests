@@ -264,7 +264,7 @@ describe("NumberGame tests set #1", function () {
             });
             let totalReward = 0;
             let totalBet = 0;
-            const numGames = 50;
+            const numGames = 300;
 
             for (let i = 0; i < numGames; i++) {
                 totalBet += 1;
@@ -288,6 +288,7 @@ describe("NumberGame tests set #1", function () {
                     }
                 }
             }
+            console.log(totalReward);
             const houseEdge = (totalBet - totalReward) / totalBet;
             console.log(houseEdge * 100);
         });
