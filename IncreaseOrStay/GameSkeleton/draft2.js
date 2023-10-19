@@ -25,24 +25,24 @@ function getReward(round) {
             if (randomValue < 0.2) return 0;
             else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 40% to 90%
             else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 0.5) + 1; // 100% to 150%
-            else rewardMultiplier = (Math.random() * 1) + 2; // 200% to 300%
+            else rewardMultiplier = (Math.random() * 1.5) + 1.3; // 200% to 300%
             break;
 
-        // case 1:// EV =7.92%
-        // totalBets += INITIAL_BET;
-        //     if (randomValue < 0.3) return 0;
-        //     else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 40% to 90%
-        //     else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 1) + 1; // 150% to 165%
-        //     else rewardMultiplier = (Math.random() * 1.8) + 1; // 300% to 500%
-        //     break;
+        case 2:// EV =7.92%
+        totalBets += INITIAL_BET;
+            if (randomValue < 0.3) return 0;
+            else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 40% to 90%
+            else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 1) + 1; // 150% to 165%
+            else rewardMultiplier = (Math.random() * 1.8) + 1; // 300% to 500%
+            break;
 
-        // case 1://EV =9.5%
-        // totalBets += INITIAL_BET;
-        //     if (randomValue < 0.4) return 0;
-        //     else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 40% to 90%
-        //     else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 1.2) + 1; // 200% to 300%
-        //     else rewardMultiplier = (Math.random() * 2) + 1; // 400% to 700%
-        //     break;
+        case 3://EV =9.5%
+        totalBets += INITIAL_BET;
+            if (randomValue < 0.4) return 0;
+            else if (randomValue < 0.5) rewardMultiplier = (Math.random() * 0.5) + 0.4; // 40% to 90%
+            else if (randomValue < 0.9) rewardMultiplier = (Math.random() * 1.2) + 1; // 200% to 300%
+            else rewardMultiplier = (Math.random() * 2) + 1; // 400% to 700%
+            break;
         default:
             console.log("Invalid round");
             return 0;
@@ -51,11 +51,24 @@ function getReward(round) {
     return parseFloat((INITIAL_BET * rewardMultiplier).toFixed(2));
 }
 
+function calculateValues(){
+    const round1 =(0.2*0)+(0.3*((0.4+0.9)/2))+(0.4*((1+1.5)/2))+(0.1*((1.3+2.5)/2));
+    const round2 =(0.3*0)+(0.2*((0.4+0.9)/2))+(0.4*((1+2)/2))+(0.1*((1+2.8)/2));
+    const round3 =(0.4*0)+(0.1*((0.4+0.9)/2))+(0.4*((1+2.2)/2))+(0.1*((1+3)/2));
+    console.log(round1); 
+    console.log(round2);
+    console.log(round3);
+    const totalEv = round1*round2*round3
+    console.log(totalEv)
+    rl.close();
+    return;
+}
+
 function playgame(round = 1) {
     const reward = getReward(round);
 
     totalGame = totalWins + totalLosses;
-    if (reward === 0 || round === 2) {
+    if (reward === 0 || round === 1) {
         if (reward === 0) {
             totalLosses++;
         }
@@ -93,3 +106,4 @@ for (iteration = 0; iteration < 1000; iteration++) {
 
 const averageHouseEdge = totalHouseEdge / 1000;
 console.log(`Average House Edge: ${(averageHouseEdge * 100).toFixed(2)}%`);
+calculateValues();

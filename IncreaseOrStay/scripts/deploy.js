@@ -7,10 +7,10 @@ async function main() {
 
     const defaultMinBetRaw = ethers.utils.parseUnits('0.00005', 'ether');
     const defaultMinBet = defaultMinBetRaw.toNumber();
-    const NumberGame = await ethers.getContractFactory("NumberGame");
-    const contract = await NumberGame.deploy(defaultMinBet);
+    const IncreaseOrStay = await ethers.getContractFactory("IncreaseOrStay");
+    const contract = await IncreaseOrStay.deploy(defaultMinBet);
 
-    console.log("NumberGame address:", await contract.address);
+    console.log("IncreaseOrStay address:", await contract.address);
 }
 
 main()

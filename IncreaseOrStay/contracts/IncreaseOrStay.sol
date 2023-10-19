@@ -158,7 +158,7 @@ contract IncreaseOrStay is ReentrancyGuard {
         }
     }
 
-    function Withdraw(uint256 gameId) public {
+    function Withdraw(uint256 gameId) public nonReentrant{
         Game storage game = games[gameId];
         require(gameId < nextGameId, "Invalid game ID");
         require(game.currentState != GameState.GameEnded, "Game Ended");
