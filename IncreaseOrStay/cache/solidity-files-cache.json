@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\jingzhi\\Downloads\\buyNFT-main\\buyNFT-main\\tests\\IncreaseOrStay\\contracts\\IncreaseOrStay.sol": {
-      "lastModificationDate": 1697383760400,
-      "contentHash": "e1c1cc2243aa313ee689ff4f6a3a4544",
+      "lastModificationDate": 1697993042317,
+      "contentHash": "0840cc1fd4769342c4c9adb062d10d18",
       "sourceName": "contracts/IncreaseOrStay.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -29,7 +29,8 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/security/ReentrancyGuard.sol"
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/utils/math/SafeMath.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -71,6 +72,41 @@
       ],
       "artifacts": [
         "ReentrancyGuard"
+      ]
+    },
+    "C:\\Users\\jingzhi\\Downloads\\buyNFT-main\\buyNFT-main\\tests\\IncreaseOrStay\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SafeMath.sol": {
+      "lastModificationDate": 1697114336664,
+      "contentHash": "f6f4fda16c536e57069af40a245c985e",
+      "sourceName": "@openzeppelin/contracts/utils/math/SafeMath.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeMath"
       ]
     }
   }

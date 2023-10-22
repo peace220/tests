@@ -267,8 +267,8 @@ describe("NumberGame tests set #1", function () {
             const numGames = 300;
 
             for (let i = 0; i < numGames; i++) {
-                totalBet += 1;
-                const playerBet = ethers.utils.parseEther("1"); // Set your desired bet amount
+                totalBet += 0.05;
+                const playerBet = ethers.utils.parseEther("0.05"); // Set your desired bet amount
                 await increaseOrStay.connect(addr1).createGame({ value: playerBet });
 
                 const gameId = i + 1;
@@ -288,9 +288,10 @@ describe("NumberGame tests set #1", function () {
                     }
                 }
             }
+            const EV = totalReward / totalBet;
+            console.log(totalBet);
             console.log(totalReward);
-            const houseEdge = (totalBet - totalReward) / totalBet;
-            console.log(houseEdge * 100);
+            console.log(EV * 100);
         });
     })
 });

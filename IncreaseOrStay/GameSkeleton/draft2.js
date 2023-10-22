@@ -46,7 +46,7 @@ function getReward(round) {
                 ROUND_NUMBER = 2;
             }
             else {
-                rewardMultiplier = (Math.random() * 0.35) + 1.8; // 18% to 215%
+                rewardMultiplier = (Math.random() * 0.35) + 1.8; // 180% to 215%
                 ROUND_NUMBER = 2;
             }
             break;
@@ -56,7 +56,7 @@ function getReward(round) {
                 ROUND_NUMBER = 0; return 0;
             }
             else if (randomValue < 0.5) {
-                rewardMultiplier = (Math.random() * 0.4) + 0.3; // 40% to 90%
+                rewardMultiplier = (Math.random() * 0.4) + 0.3; // 30% to 70%
                 ROUND_NUMBER = 3;
             }
             else if (randomValue < 0.85) {
@@ -95,6 +95,50 @@ function getReward(round) {
     return parseFloat((INITIAL_BET * rewardMultiplier).toFixed(2));
 }
 
+function triplernothing(round) {
+    const randomValue = Math.random();
+
+    let rewardMultiplier;
+    // console.log("Starting round#",round);
+    switch (round) {
+        //eV = expected return,
+        case 1: //House_Edge = 5.46%
+            totalBets += INITIAL_BET;
+            if (randomValue < 0.5) {
+                ROUND_NUMBER = 0; return 0;
+            }
+            else {
+                rewardMultiplier = 3
+                ROUND_NUMBER = 2;
+            }
+            break;
+        case 2:// HE =7.92%
+        if (randomValue < 0.5) {
+            ROUND_NUMBER = 0; return 0;
+        }
+        else {
+            rewardMultiplier = 3
+            ROUND_NUMBER = 3;
+        }
+        break;
+
+        case 3://HE =9.5%
+        if (randomValue < 0.5) {
+            ROUND_NUMBER = 0; return 0;
+        }
+        else {
+            rewardMultiplier = 3
+            ROUND_NUMBER = 0;
+        }
+        break;
+        default:
+            console.log("Invalid round");
+            return 0;
+    }
+
+    // console.log("rewardMultiplier :", rewardMultiplier);
+    return parseFloat((INITIAL_BET * rewardMultiplier).toFixed(2));
+}
 function main() {
     const loop = 100000;
     let result = 0;
@@ -102,16 +146,20 @@ function main() {
 
     for (let i = 0; i < loop; i++) {
         do {
-            result = getReward(ROUND_NUMBER);
+            result = triplernothing(ROUND_NUMBER);
         }
         while (ROUND_NUMBER > 0);
         ROUND_NUMBER = 1;
         endResult += result;
+        // if(result>=2){
+        //     console.log(result);
+        //     break;
+        // }
     }
-    // console.log("endResult",endResult);
     const x = endResult/loop;
 
-    console.log("expected return:",x)
+    houseEdge = (totalBets - endResult) / totalBets;
+    console.log("expected return:",1-houseEdge)
     return;
 }
 
@@ -119,15 +167,28 @@ function calculateValues(){
     const round1 =(0.2*0)+(0.3*((0.4+0.5)/2))+(0.3*((1+1.8)/2))+(0.2*((1.8+2.15)/2));
     const round2 =(0.3*0)+(0.2*((0.3+0.4)/2))+(0.35*((1+2)/2))+(0.15*((2+2.75)/2));
     const round3 =(0.4*0)+(0.1*((0.1+0.4)/2))+(0.4*((1.1+2)/2))+(0.1*((2+4)/2));
-    console.log(round1); 
-    console.log(round2);
-    console.log(round3);
+    console.log("caluclated EV:",round1); 
+    console.log("caluclated EV:",round2);
+    console.log("caluclated EV:",round3);
+    const totalEv = round1+round2+round3
+    console.log(totalEv)
+    return;
+}
+
+function EVforDoN(){
+    const round1 =(0.5*3)
+    const round2 =(0.5*3)
+    const round3 =(0.5*3)
+    console.log("caluclated EV:",round1); 
+    console.log("caluclated EV:",round2);
+    console.log("caluclated EV:",round3);
     const totalEv = round1*round2*round3
     console.log(totalEv)
     return;
 }
 calculateValues()
-main()
+
+// main()
 // const y = 1 * (1- 0.05) * (1- 0.05) * (1- 0.05)
 // console.log(y)
 
