@@ -264,7 +264,7 @@ describe("NumberGame tests set #1", function () {
             });
             let totalReward = 0;
             let totalBet = 0;
-            const numGames = 300;
+            const numGames = 3000;
 
             for (let i = 0; i < numGames; i++) {
                 totalBet += 0.05;
@@ -289,9 +289,7 @@ describe("NumberGame tests set #1", function () {
                 }
             }
             const EV = totalReward / totalBet;
-            console.log(totalBet);
-            console.log(totalReward);
-            console.log(EV * 100);
+            console.log("EV=",EV * 100);
         });
     })
 });

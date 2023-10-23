@@ -100,18 +100,22 @@ contract IncreaseOrStay is ReentrancyGuard {
         bytes32 randomHash = keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp, block.number));
         uint256 randomValue = uint256(keccak256(abi.encodePacked(block.timestamp,block.difficulty,blockhash(block.number - 1)))) % 101;
         uint256 rewardMultiplier;
+        uint256 number = uint(randomHash)%1001;
         if (game.currentState == GameState.Round1) {
             if (randomValue < 20) {
                 game.currentState = GameState.Lost;
                 return 0;
-            } else if (randomValue < 50){
-                rewardMultiplier = uint256(randomHash) % 11; //0 to 10
+            } else if (randomValue < 50){ 
+                uint256 squaredValue = (number*number)/1000;
+                rewardMultiplier = squaredValue; //0 to 1
             }
             else if (randomValue < 80){
-                rewardMultiplier = (uint256(randomHash) % 11) + 10; //10 to 20
+                uint256 cubedValue = (number*number*number)/1000000;
+                rewardMultiplier = cubedValue + 1000; //1 to 2
             }
             else{
-                rewardMultiplier = (uint256(randomHash) % 21) + 20; //20 to 40
+                uint256 quadValue = (number*number*number*number)/1000000000;
+                rewardMultiplier = 2000+ quadValue ; //2 to 3
             } 
 
             game.currentState = GameState.Round2;
@@ -120,13 +124,16 @@ contract IncreaseOrStay is ReentrancyGuard {
                 game.currentState = GameState.Lost;
                 return 0;
             } else if (randomValue < 50){
-                rewardMultiplier = uint256(randomHash) % 11; //0 to 10
+                uint256 squaredValue = (number*number)/1000;
+                rewardMultiplier = squaredValue; //0 to 1
             }
             else if (randomValue < 80){
-                rewardMultiplier = (uint256(randomHash) % 11) + 10; //10 to 20
+                uint256 squaredValue = (number*number)/1000;
+                rewardMultiplier = squaredValue + 1000; //1 to 2
             }
             else{
-                rewardMultiplier = (uint256(randomHash) % 41) + 20; //20 to 60
+                uint256 cubedValue = (number*number*number)/1000000;
+                rewardMultiplier = cubedValue*4 + 2000; //2 to 6
             } 
 
             game.currentState = GameState.Round3;
@@ -135,19 +142,21 @@ contract IncreaseOrStay is ReentrancyGuard {
                 game.currentState = GameState.Lost;
                 return 0;
             } else if (randomValue < 50){
-                rewardMultiplier = uint256(randomHash) % 11; //0 to 10
+                uint256 squaredValue = (number*number)/1000;
+                rewardMultiplier = squaredValue; //0 to 1
             }
             else if (randomValue < 80){
-                rewardMultiplier = (uint256(randomHash) % 11) + 10; //10 to 20
+                uint256 squaredValue = (number*number)/1000;
+                rewardMultiplier = squaredValue + 1000; //1 to 2
             }
             else {
-
-                rewardMultiplier = (uint256(randomHash) % 81) + 20; //20 to 100
+                uint256 cubedValue = (number*number*number)/1000000;
+                rewardMultiplier = cubedValue*8 + 2000; //2 to 10
             } 
             game.currentState = GameState.Win;
         }
 
-        return (InitialBet * rewardMultiplier) / 10; // make the multiplier to included "decimal"
+        return (InitialBet * rewardMultiplier) / 1000; // make the multiplier to included "decimal"
     }
 
     function playGame(uint256 gameId) public payable {
