@@ -81,7 +81,7 @@ function getReward(round) {
 }
 
 function main() {
-    const loop = 300;
+    const loop = 30000;
     let result = 0;
     let endResult = 0;
 

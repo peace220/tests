@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\User\\Downloads\\tests-main (2)\\tests-main\\IncreaseOrStay\\contracts\\IncreaseOrStay.sol": {
-      "lastModificationDate": 1698024301177,
-      "contentHash": "9899da25bbe62a023640957f6a96321f",
+      "lastModificationDate": 1698025310428,
+      "contentHash": "020e565b71ce3a13bc959af558fde555",
       "sourceName": "contracts/IncreaseOrStay.sol",
       "solcConfig": {
         "version": "0.8.0",

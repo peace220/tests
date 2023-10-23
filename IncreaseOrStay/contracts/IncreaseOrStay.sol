@@ -106,15 +106,15 @@ contract IncreaseOrStay is ReentrancyGuard {
                 game.currentState = GameState.Lost;
                 return 0;
             } else if (randomValue < 50){ 
-                uint256 squaredValue = (number*number)/1000;
+                uint256 squaredValue = (number**2)/1000;
                 rewardMultiplier = squaredValue; //0 to 1
             }
             else if (randomValue < 80){
-                uint256 cubedValue = (number*number*number)/1000000;
+                uint256 cubedValue = (number**3)/1000000;
                 rewardMultiplier = cubedValue + 1000; //1 to 2
             }
             else{
-                uint256 quadValue = (number*number*number*number)/1000000000;
+                uint256 quadValue = (number**4)/1000000000;
                 rewardMultiplier = 2000+ quadValue ; //2 to 3
             } 
 
@@ -124,15 +124,15 @@ contract IncreaseOrStay is ReentrancyGuard {
                 game.currentState = GameState.Lost;
                 return 0;
             } else if (randomValue < 50){
-                uint256 squaredValue = (number*number)/1000;
+                uint256 squaredValue = (number**2)/1000;
                 rewardMultiplier = squaredValue; //0 to 1
             }
             else if (randomValue < 80){
-                uint256 squaredValue = (number*number)/1000;
+                uint256 squaredValue = (number**2)/1000;
                 rewardMultiplier = squaredValue + 1000; //1 to 2
             }
             else{
-                uint256 cubedValue = (number*number*number)/1000000;
+                uint256 cubedValue = (number**3)/1000000;
                 rewardMultiplier = cubedValue*4 + 2000; //2 to 6
             } 
 
@@ -142,15 +142,15 @@ contract IncreaseOrStay is ReentrancyGuard {
                 game.currentState = GameState.Lost;
                 return 0;
             } else if (randomValue < 50){
-                uint256 squaredValue = (number*number)/1000;
+                uint256 squaredValue = (number**2)/1000;
                 rewardMultiplier = squaredValue; //0 to 1
             }
             else if (randomValue < 80){
-                uint256 squaredValue = (number*number)/1000;
+                uint256 squaredValue = (number**2)/1000;
                 rewardMultiplier = squaredValue + 1000; //1 to 2
             }
             else {
-                uint256 cubedValue = (number*number*number)/1000000;
+                uint256 cubedValue = (number**3)/1000000;
                 rewardMultiplier = cubedValue*8 + 2000; //2 to 10
             } 
             game.currentState = GameState.Win;

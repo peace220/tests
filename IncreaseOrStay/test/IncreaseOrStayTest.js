@@ -255,7 +255,7 @@ describe("NumberGame tests set #1", function () {
     })
 
     describe("HouseEdge", function () {
-        it("HouseEdge from the smart contract should be the same as the draft", async function () {
+        it("HouseEdge from the smart contract should be the equivalent as draft Round 3", async function () {
             const amountToSend = ethers.utils.parseEther('1000');
 
             await owner.sendTransaction({
@@ -264,11 +264,12 @@ describe("NumberGame tests set #1", function () {
             });
             let totalReward = 0;
             let totalBet = 0;
-            const numGames = 3000;
+            let bet =1;
+            const numGames = 300;
 
             for (let i = 0; i < numGames; i++) {
-                totalBet += 0.05;
-                const playerBet = ethers.utils.parseEther("0.05"); // Set your desired bet amount
+                totalBet += bet;
+                const playerBet = ethers.utils.parseEther(bet.toString()); // Set your desired bet amount
                 await increaseOrStay.connect(addr1).createGame({ value: playerBet });
 
                 const gameId = i + 1;
@@ -291,5 +292,68 @@ describe("NumberGame tests set #1", function () {
             const EV = totalReward / totalBet;
             console.log("EV=",EV * 100);
         });
+
+        it("HouseEdge from the smart contract should be the equivalent as draft Round 2", async function () {
+            const amountToSend = ethers.utils.parseEther('1000');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
+            let totalReward = 0;
+            let totalBet = 0;
+            let bet =1;
+            const numGames = 300;
+
+            for (let i = 0; i < numGames; i++) {
+                totalBet += bet;
+                const playerBet = ethers.utils.parseEther(bet.toString()); // Set your desired bet amount
+                await increaseOrStay.connect(addr1).createGame({ value: playerBet });
+
+                const gameId = i + 1;
+                await increaseOrStay.connect(addr1).playGame(gameId);
+
+                let game = await increaseOrStay.games(gameId);
+                let reward = parseFloat(ethers.utils.formatEther(game.reward));
+                if (game.currentState == 1) {
+                    await increaseOrStay.connect(addr1).playGame(gameId);
+                    game = await increaseOrStay.games(gameId);
+                    reward = parseFloat(ethers.utils.formatEther(game.reward));
+                    totalReward += reward;
+                }
+            }
+            const EV = totalReward / totalBet;
+            console.log("EV=",EV * 100);
+        });
+
+        it("HouseEdge from the smart contract should be equivalent as draft Round 1", async function () {
+            const amountToSend = ethers.utils.parseEther('1000');
+
+            await owner.sendTransaction({
+                to: increaseOrStay.address,
+                value: amountToSend,
+            });
+            let totalReward = 0;
+            let totalBet = 0;
+            let bet = 1;
+            const numGames = 300;
+
+            for (let i = 0; i < numGames; i++) {
+                totalBet += bet;
+                const playerBet = ethers.utils.parseEther(bet.toString()); // Set your desired bet amount
+                await increaseOrStay.connect(addr1).createGame({ value: playerBet });
+
+                const gameId = i + 1;
+                await increaseOrStay.connect(addr1).playGame(gameId);
+
+                let game = await increaseOrStay.games(gameId);
+                let reward = parseFloat(ethers.utils.formatEther(game.reward));
+                totalReward += reward;
+            }
+            const EV = totalReward / totalBet;
+            console.log("EV=",EV * 100);
+        });
+
+
     })
 });
